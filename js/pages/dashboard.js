@@ -33,7 +33,7 @@
         <div class="hero-card__text">
           <p class="hero-card__hello">Welcome back</p>
           <h1 class="hero-card__name" id="heroName">${esc(name)}</h1>
-          <div class="hero-card__meta"><span>File ref. <strong>${esc(a.fileRef)}</strong></span>${active ? `<span>OTR No <strong>${esc(a.otrNo)}</strong></span>` : ""}<span>Username <strong>${esc(a.username)}</strong></span></div>
+          <div class="hero-card__meta"><span>OTR No <strong>${esc(a.otrNo)}</strong></span><span>File ref. <strong>${esc(a.fileRef)}</strong></span><span>Username <strong>${esc(a.username)}</strong></span></div>
           <div class="hero-card__actions">
             ${steps.length ? `<a class="btn btn--primary" href="${steps[0].page}"><i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Continue: ${esc(steps[0].title)}</a>` : '<a class="btn btn--primary" href="verification.html"><i class="bi bi-shield-check" aria-hidden="true"></i>See verification</a>'}
             <a class="btn btn--outline" href="history.html"><i class="bi bi-clock-history" aria-hidden="true"></i>Profile history</a>
@@ -51,10 +51,11 @@
           <div class="status-card__row"><span>Activation fee</span><strong>${a.payment.amount ? Shell.rupees(a.payment.amount) + " paid" : "No fee (" + esc(a.payment.rule) + ")"}</strong></div>
           <div class="status-card__row"><span>Transaction reference</span><strong>${esc(a.payment.txn || "Not applicable")}</strong></div>
           <div class="note note--ok"><i class="bi bi-patch-check" aria-hidden="true"></i><span>You can now apply for TNUSRB recruitments with your OTR number. You can still update your details, except your Aadhaar number.</span></div>` : `
+          <div class="status-card__row"><span>OTR number</span><strong class="status-card__otr">${esc(a.otrNo)}</strong></div>
           <div class="status-card__row"><span>Applicable rule</span><strong>${esc(f.rule)}</strong></div>
           <div class="status-card__row"><span>Activation fee</span><strong>${f.amount ? Shell.rupees(f.amount) : "No fee"}</strong></div>
           <div class="status-card__row"><span>Profile complete</span><strong>${pct.overall.pct}%</strong></div>
-          <p class="modal__lead">Activate to receive your OTR number. It is valid for 5 years. You can still update your details afterwards, except your Aadhaar number.</p>
+          <p class="modal__lead">Your OTR number is issued. Accept the declaration and pay the fee to activate it; it is then valid for 5 years. You can still update your details afterwards, except your Aadhaar number.</p>
           <button type="button" class="btn btn--primary btn--block" id="dashActivate"><i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>Review &amp; activate</button>`}
       </section>
     </div>

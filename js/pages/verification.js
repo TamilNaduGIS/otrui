@@ -18,7 +18,7 @@
       { title: "Aadhaar e-KYC", text: "Identity confirmed with UIDAI.", done: true },
       { title: "Certificates", text: missing.length ? `${missing.length} not verified or uploaded yet.` : "All verified with e-Sevai or uploaded.", done: !missing.length },
       { title: "Photo & signature", text: photos === 3 ? "Photo, signature and thumb uploaded." : `${photos} of 3 uploaded.`, done: photos === 3 },
-      { title: "OTR activation", text: active ? `Active, OTR No ${s.account.otrNo}.` : "Pay the activation fee to get your OTR number.", done: active }
+      { title: "OTR activation", text: active ? `Active, OTR No ${s.account.otrNo}.` : `OTR No ${s.account.otrNo} is issued. Pay the activation fee to activate it.`, done: active }
     ];
   }
 

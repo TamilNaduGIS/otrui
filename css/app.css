@@ -434,3 +434,23 @@
 .vitem.is-missing { border-color: rgba(216, 172, 66, .55); background: #fffcf3; }
 .verify-note { margin-top: 1rem; }
 .doc-preview { max-width: 100%; max-height: 60vh; border-radius: 12px; border: 1px solid var(--c-border); }
+
+/* ---------- Activation: details, declaration and consent ---------- */
+#activateModal { width: min(680px, calc(100vw - 2rem)); }
+.act-summary { padding: .9rem 1rem; border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-page); }
+.act-summary .kv { gap: .6rem 1rem; }
+.terms__ver { margin-left: .4rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--c-muted); }
+.terms__list {
+  margin: 0; padding: .85rem 1rem .85rem 2.1rem; max-height: 210px; overflow-y: auto;
+  border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-card);
+  font-size: var(--fs-sm); line-height: 1.55; color: var(--c-text);
+}
+.terms__list li + li { margin-top: .45rem; }
+.terms__list:focus-visible { box-shadow: var(--focus); }
+.terms__checks { display: flex; flex-direction: column; gap: .6rem; }
+/* the scrolling modal body must not squeeze its blocks (the fee box has overflow: hidden) */
+.modal__body > * { flex-shrink: 0; }
+/* a category that cannot apply to this applicant */
+.scard.is-na { background: var(--c-page); box-shadow: none; }
+.scard.is-na .scard__icon { background: var(--c-card); color: var(--c-muted); }
+.scard.is-na .scard__title { color: var(--c-muted); }

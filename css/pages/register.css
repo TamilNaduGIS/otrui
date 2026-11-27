@@ -89,3 +89,14 @@
   .kyc__badge { position: static; order: -1; }
   .reg-card__foot .btn--primary { min-width: 0; flex: 1; }
 }
+
+/* File reference number, shown part by part */
+.ref-box { width: 100%; padding: .9rem 1rem; border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-page); display: flex; flex-direction: column; gap: .7rem; }
+.ref-box__top { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .3rem .75rem; }
+.ref-box__top .done__ref-label { width: 100%; }
+.ref-box__value { font-family: Consolas, "Courier New", monospace; font-size: 1.05rem; font-weight: 700; letter-spacing: .05em; color: var(--c-navy); }
+.ref-parts { display: flex; justify-content: center; gap: .4rem; flex-wrap: wrap; }
+.ref-part { display: flex; flex-direction: column; align-items: center; min-width: 64px; padding: .35rem .6rem; border-radius: var(--r-sm); background: var(--c-card); border: 1px solid var(--c-border); }
+.ref-part strong { font-family: Consolas, monospace; color: var(--c-navy); }
+.ref-part small { font-size: .6875rem; color: var(--c-muted); }
+.kyc__data dt { white-space: nowrap; }

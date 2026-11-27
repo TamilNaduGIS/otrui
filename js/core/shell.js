@@ -146,20 +146,42 @@ window.Shell = (() => {
   modal.className = "modal";
   modal.id = "activateModal";
   modal.setAttribute("aria-labelledby", "activateTitle");
+  // Declaration and consent shown before payment (wording to be confirmed by TNUSRB before go-live).
+  const CONSENT_VERSION = "2026.1";
+  const TERMS = [
+    "I declare that all the details in my One-Time Registration (OTR) profile, and the documents I have uploaded or verified, are true, complete and correct to the best of my knowledge.",
+    "I understand that if any detail is found to be false, incorrect or hidden at any stage, my OTR may be cancelled, my application for any recruitment may be rejected, and action may be taken under the law.",
+    "I understand that my OTR number is valid for 5 years from the date of activation. It does not by itself make me eligible for any post; eligibility is decided for each recruitment as per its notification.",
+    "I consent to the Tamil Nadu Uniformed Services Recruitment Board processing my personal data, including the details received through my Aadhaar e-KYC and the certificates verified through e-Sevai, for registration, verification and recruitment, in line with the Digital Personal Data Protection Act, 2023. My Aadhaar number is not stored in clear text.",
+    "I agree that SMS and email sent to my registered mobile number and email are valid communication, and I will keep them up to date.",
+    "I understand that the activation fee is paid online through the authorised payment gateway and is not refundable or transferable once paid.",
+    "I may update my details after activation, except my Aadhaar number. Every change is recorded in my profile history and may be checked during recruitment."
+  ];
   modal.innerHTML = `
     <div class="modal__head"><h2 class="modal__title" id="activateTitle">Activate your OTR</h2>
       <button type="button" class="modal__close" data-close aria-label="Close"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
     <div data-view="pay">
       <div class="modal__body">
-        <p class="modal__lead">Pay the one-time activation fee to receive your OTR number. It is valid for 5 years.</p>
+        <p class="modal__lead">Your OTR number <strong data-otr-pending></strong> becomes active once you accept the declaration and pay the activation fee. It is then valid for 5 years.</p>
+        <div class="act-summary">
+          <p class="checklist__title">Your details</p>
+          <dl class="kv kv--2" data-summary></dl>
+        </div>
         <div class="fee-card">
           <div class="fee-card__row"><span>Community</span><strong data-fee="label"></strong></div>
           <div class="fee-card__row"><span>Applicable rule</span><strong data-fee="rule"></strong></div>
           <div class="fee-card__total"><span>Activation fee</span><strong data-fee="amount"></strong></div>
         </div>
         <div class="checklist"><p class="checklist__title">Profile completion</p><ul class="checklist__list" data-checklist></ul></div>
-        <div class="note note--info"><i class="bi bi-info-circle" aria-hidden="true"></i><span>After activation you can still update your details, except your Aadhaar number. Every change is kept in your profile history.</span></div>
-        <label class="check"><input type="checkbox" data-declare /><span>I declare that the details in my profile are true and correct.</span></label>
+        <section class="terms" aria-labelledby="termsTitle">
+          <p class="checklist__title" id="termsTitle">Declaration and consent <span class="terms__ver">Version ${CONSENT_VERSION}</span></p>
+          <ol class="terms__list" tabindex="0" aria-label="Declaration and consent text">${TERMS.map((t) => `<li>${esc(t)}</li>`).join("")}</ol>
+        </section>
+        <div class="terms__checks">
+          <label class="check"><input type="checkbox" data-consent="declare" /><span>I have read the declaration. The details in my profile are true, complete and correct.</span></label>
+          <label class="check"><input type="checkbox" data-consent="data" /><span>I consent to my personal data, including my Aadhaar e-KYC details, being used for registration, verification and recruitment as described above.</span></label>
+          <label class="check" data-fee-only><input type="checkbox" data-consent="fee" /><span>I understand that the activation fee is not refundable or transferable once paid.</span></label>
+        </div>
       </div>
       <div class="modal__foot"><button type="button" class="btn btn--ghost" data-close>Not now</button>
         <button type="button" class="btn btn--primary" data-pay disabled><i class="bi bi-credit-card" aria-hidden="true"></i><span data-pay-text></span></button></div>
@@ -167,66 +189,70 @@ window.Shell = (() => {
     <div data-view="done" class="d-none">
       <div class="modal__body modal__body--center">
         <div class="done__icon" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
-        <p class="modal__lead">Your OTR is active.</p>
+        <p class="modal__lead">Your OTR is now active.</p>
         <div class="done__ref"><span class="done__ref-label">Your OTR number</span><span class="done__ref-value" data-otr-no></span><span class="done__ref-label" data-valid></span></div>
       </div>
       <div class="modal__foot"><button type="button" class="btn btn--primary" data-close>Done</button></div>
     </div>`;
   document.body.append(modal);
   const q = (sel) => modal.querySelector(sel);
+  const consents = () => [...modal.querySelectorAll("[data-consent]")].filter((c) => !c.closest(".d-none"));
+  const allAccepted = () => consents().every((c) => c.checked);
 
   function fillActivation(root, s) {
     const f = S.fee(s);
     const pct = S.completion(s);
+    const p = S.valuesOf(s, "personal");
+    q("[data-otr-pending]").textContent = s.account.otrNo;
+    q("[data-summary]").innerHTML = [
+      ["Name", p.fullName || s.ekyc.name], ["Date of birth", S.dmy(s.ekyc.dob)], ["Gender", s.ekyc.genderLabel], ["Father's name", p.fatherName],
+      ["Mobile", Store.mask(s.account.mobile)], ["Email", s.account.email]
+    ].map(([k, v]) => `<div class="kv__item"><dt>${k}</dt><dd>${v ? esc(v) : '<span class="kv__empty">Not added</span>'}</dd></div>`).join("");
     root.querySelector('[data-fee="label"]').textContent = f.label;
     root.querySelector('[data-fee="rule"]').textContent = f.rule;
     root.querySelector('[data-fee="amount"]').textContent = f.amount ? rupees(f.amount) : "No fee";
     root.querySelector("[data-pay-text]").textContent = f.amount ? `Pay ${rupees(f.amount)}` : "Activate now";
+    q("[data-fee-only]").classList.toggle("d-none", !f.amount);
     root.querySelector("[data-checklist]").innerHTML = S.PROFILE_MODULES.map((m) => {
       const mod = S.MODULES.find((x) => x.key === m);
       return `<li class="${pct[m].pct >= 100 ? "is-ok" : ""}"><a href="${mod.page}">${esc(mod.title)}</a><span class="checklist__pct">${pct[m].pct}%</span></li>`;
     }).join("");
-    const declare = root.querySelector("[data-declare]");
-    root.querySelector("[data-pay]").disabled = !declare.checked;
+    root.querySelector("[data-pay]").disabled = !allAccepted();
   }
   function openActivation() {
     const s = Store.get();
     if (s.account.status === "ACTIVE") return;
-    q("[data-declare]").checked = false;
+    modal.querySelectorAll("[data-consent]").forEach((c) => (c.checked = false));
     fillActivation(modal, s);
     q('[data-view="pay"]').classList.remove("d-none");
     q('[data-view="done"]').classList.add("d-none");
     modal.showModal();
   }
-  function otrNumber(g) {
-    const ok = (b) => [...b].every((c, i) => i === 0 || Math.abs(Number(c) - Number(b[i - 1])) > 1);
-    const block = () => { let b; do b = String(Math.floor(Math.random() * 1000)).padStart(3, "0"); while (!ok(b)); return b; };
-    return block() + g + block() + "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[Math.floor(Math.random() * 36)];
-  }
   const dmyDate = (d) => d.toLocaleDateString("en-GB").replace(/\//g, "-");
-  /** Pays (preview) and activates. `done(no)` runs afterwards. */
+  /** Records the consent, pays (preview) and activates the OTR number issued at registration. */
   function pay(btn, done) {
     btn.disabled = true;
     btn.querySelector("[data-pay-text]").textContent = "Processing...";
     setTimeout(() => {
       const s = Store.get();
       const f = S.fee(s);
-      const no = otrNumber(s.ekyc.gender);
       const until = new Date();
       until.setFullYear(until.getFullYear() + 5);
+      const at = new Date().toISOString();
       Store.commit({ module: "activation", title: "OTR activated", changes: [
-        { label: "Status", from: "Inactive", to: "Active" }, { label: "OTR No", from: "", to: no },
+        { label: "Status", from: "Inactive", to: "Active" }, { label: "Valid until", from: "", to: dmyDate(until) },
+        { label: "Declaration and consent", from: "", to: `Accepted (version ${CONSENT_VERSION})` },
         { label: "Activation fee", from: "", to: f.amount ? `${rupees(f.amount)} paid` : `No fee (${f.rule})` }] }, (st) => {
         st.account.status = "ACTIVE";
-        st.account.otrNo = no;
         st.account.validUntil = until.toISOString().slice(0, 10);
-        st.account.activatedOn = new Date().toISOString();
-        st.account.payment = { amount: f.amount, rule: f.rule, txn: f.amount ? `TXN${Date.now().toString().slice(-10)}` : null, date: new Date().toISOString() };
+        st.account.activatedOn = at;
+        st.account.consent = { version: CONSENT_VERSION, at };
+        st.account.payment = { amount: f.amount, rule: f.rule, txn: f.amount ? `TXN${Date.now().toString().slice(-10)}` : null, date: at };
       });
-      done(no, dmyDate(until));
+      done(s.account.otrNo, dmyDate(until));
     }, 1200);
   }
-  q("[data-declare]").addEventListener("change", () => { q("[data-pay]").disabled = !q("[data-declare]").checked; });
+  modal.addEventListener("change", (e) => { if (e.target.matches("[data-consent]")) q("[data-pay]").disabled = !allAccepted(); });
   q("[data-pay]").addEventListener("click", () => pay(q("[data-pay]"), (no, until) => {
     q("[data-otr-no]").textContent = no;
     q("[data-valid]").textContent = `Valid until ${until}`;

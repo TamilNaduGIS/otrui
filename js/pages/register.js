@@ -105,12 +105,18 @@
     }
     $(f).focus();
   }
+  /** e-KYC details read from the UIDAI response (the preview uses a sample response with the same structure). */
+  let kyc = null;
   function showKyc() {
-    // Sample data for the preview; the real details come from UIDAI.
-    $("kycName").textContent = "SAMPLE APPLICANT";
-    $("kycDob").textContent = "14-05-2001";
-    $("kycGender").textContent = "Male";
-    $("kycAddress").textContent = "12, Gandhi Street, Mylapore, Chennai - 600004";
+    kyc = Ekyc.parse(Ekyc.SAMPLE_RESPONSE);
+    $("kycName").textContent = kyc.name;
+    $("kycDob").textContent = kyc.dob.split("-").reverse().join("-");
+    $("kycGender").textContent = kyc.genderLabel;
+    // C/O names the father only for S/O and D/O; otherwise show it as "Care of".
+    $("kycCareLabel").textContent = kyc.fatherName ? "Father's name" : "Care of";
+    $("kycFather").textContent = kyc.fatherName || kyc.careOf || "Not given";
+    $("kycDistrict").textContent = kyc.address.district || "Not given";
+    $("kycAddress").textContent = Ekyc.formatAddress(kyc.address);
     $("kyc").classList.remove("d-none");
     $("consentBox").classList.remove("d-none");
   }
@@ -136,15 +142,21 @@
   $("username").addEventListener("input", (e) => { e.target.value = e.target.value.toLowerCase().replace(/\s/g, ""); });
   watchPasswordRules($("password"), $("pwdRules"));
   $("refreshCaptcha").addEventListener("click", () => { $("captchaInput").value = ""; $("captchaInput").focus(); });
-  $("copyRef").addEventListener("click", async (e) => {
-    const btn = e.currentTarget;
+  document.querySelectorAll("[data-copy]").forEach((btn) => btn.addEventListener("click", async () => {
     try {
-      await navigator.clipboard.writeText($("fileRef").textContent);
-      btn.innerHTML = '<i class="bi bi-check2" aria-hidden="true"></i>Copied';
+      await navigator.clipboard.writeText($(btn.dataset.copy).textContent);
+      btn.innerHTML = '<i class="bi bi-check2" aria-hidden="true"></i><span>Copied</span>';
     } catch {
-      btn.textContent = "Select and copy the number";
+      btn.querySelector("span").textContent = "Select and copy the number";
     }
-  });
+  }));
+  /** RF + year of birth + gender + serial, shown part by part. */
+  function showRef(ref) {
+    $("fileRef").textContent = ref;
+    const m = /^RF(\d{4})([MFT])(\d{5})$/.exec(ref);
+    $("refParts").innerHTML = m ? [["RF", "Reference"], [m[1], "Year of birth"], [m[2], { M: "Male", F: "Female", T: "Transgender" }[m[2]]], [m[3], "Serial"]]
+      .map(([v, l]) => `<span class="ref-part"><strong>${v}</strong><small>${l}</small></span>`).join("") : "";
+  }
 
   // ---------- checks per step
   function needVerified(f, list) {
@@ -179,10 +191,11 @@
     CHECKS[current](list);
     if (fieldError.showAll(list, sections[current])) return;
     if (current === LAST) {
-      const ref = `REG${new Date().toISOString().slice(0, 10).replace(/-/g, "")}${String(Math.floor(Math.random() * 1e5)).padStart(5, "0")}`;
-      Store.register({ username: val("username"), mobile: val("mobile"), email: val("email"), aadhaar: val("aadhaar"), fileRef: ref });
+      // In the live system the server issues both numbers when it creates the account.
+      const account = Store.register({ username: val("username"), mobile: val("mobile"), email: val("email"), aadhaar: val("aadhaar"), ekyc: kyc });
       Store.session.start(val("username"));
-      $("fileRef").textContent = ref;
+      $("otrNo").textContent = account.otrNo;
+      showRef(account.fileRef);
     }
     go(current + 1);
   });

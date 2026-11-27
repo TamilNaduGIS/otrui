@@ -247,7 +247,8 @@ window.Form = (() => {
       this.files = {};
       fields.forEach((f) => {
         if (!f.name) return;
-        const x = values[f.name] !== undefined ? values[f.name] : f.default !== undefined ? f.default : "";
+        const d = typeof f.default === "function" ? f.default(state) : f.default;
+        const x = values[f.name] !== undefined ? values[f.name] : d !== undefined ? d : "";
         if (f.type === "readonly") this.input(f.name).value = f.value(state);
         else if (f.type === "pills" || f.type === "seg") this.el.querySelectorAll(`[data-name="${f.name}"]`).forEach((r) => (r.checked = r.value === x));
         else if (f.type === "check" || f.type === "switch") this.input(f.name).checked = Boolean(x);
@@ -283,7 +284,11 @@ window.Form = (() => {
       if (effects) {
         effects(v, {
           set: (n, x) => { this.input(n).value = x ?? ""; },
-          readonly: (n, ro) => { this.input(n).readOnly = ro; },
+          readonly: (n, ro) => {
+            const el = this.input(n);
+            el.readOnly = ro;
+            if (el.tagName === "SELECT") el.dataset.ro = ro ? "1" : ""; // a select cannot be read-only: it is disabled below
+          },
           values: () => this.raw()
         }, state);
         v = this.raw();
@@ -303,7 +308,7 @@ window.Form = (() => {
         const allowed = (!editable || editable(f.name)) && !(gated && f.name !== gate);
         this.el.querySelectorAll(`[data-name="${f.name}"]`).forEach((el) => {
           if (f.type === "select" && el.dataset.empty === "true") { el.disabled = true; return; }
-          if (f.type !== "readonly") el.disabled = !allowed;
+          if (f.type !== "readonly") el.disabled = !allowed || el.dataset.ro === "1";
         });
         if (f.type === "upload") this.wrap(f.name).querySelector("[data-upload]").classList.toggle("is-disabled", !allowed);
         if (f.type === "esevai") this.wrap(f.name).querySelector("[data-ekyc-btn]").disabled = !allowed;
@@ -430,6 +435,15 @@ window.Form = (() => {
 
     function render(s) {
       const v = S.valuesOf(s, key);
+      // a category that cannot apply to this applicant (e.g. destitute widow for a male applicant): no editing
+      if (def.eligible && !def.eligible(s)) {
+        card.classList.add("is-na");
+        card.querySelector("[data-status]").innerHTML = '<span class="tag tag--muted"><i class="bi bi-slash-circle" aria-hidden="true"></i>Not applicable</span>';
+        card.querySelector("[data-view]").innerHTML = `<p class="scard__none">${esc(def.notEligible.replace("{gender}", s.ekyc.genderLabel || "not female"))}</p>`;
+        card.querySelector("[data-edit]").classList.add("d-none");
+        return;
+      }
+      card.classList.remove("is-na");
       const cert = S.sectionCert(s, key);
       card.querySelector("[data-status]").innerHTML = (def.optional
         ? v.on ? '<span class="tag tag--ok"><i class="bi bi-check2" aria-hidden="true"></i>Applies</span>' : s.sections[key] ? '<span class="tag tag--muted">Does not apply</span>' : '<span class="tag tag--muted">Not answered</span>'
@@ -440,6 +454,7 @@ window.Form = (() => {
     }
     function open() {
       const s = Store.get();
+      if (def.eligible && !def.eligible(s)) return;
       editor = new Editor({ fields: def.fields, state: s, docBase: key, module: def.module, page: `${mod.page}#sec-${key}`, effects: def.effects, check: def.check });
       editor.onSync = () => { card.querySelector("[data-dirty]").textContent = editor.dirty ? "Unsaved changes" : ""; };
       card.querySelector("[data-fields]").replaceChildren(editor.el);

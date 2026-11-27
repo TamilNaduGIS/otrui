@@ -34,6 +34,27 @@ window.Schema = (() => {
     SCA: ["Adi Andhra", "Arunthathiyar", "Chakkiliyan", "Madari", "Madiga", "Pagadai", "Thoti"],
     ST: ["Irular", "Kattunayakan", "Kurumans", "Malayali", "Toda", "Other"]
   };
+  const STATES = ["Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
+    "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim",
+    "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"];
+  /** PIN code: 6 digits; a Tamil Nadu PIN starts with 6. */
+  const pinFor = (prefix) => (v, all) => (all[`${prefix}State`] === "Tamil Nadu"
+    ? (/^6\d{5}$/.test(v) ? null : "Enter a 6-digit Tamil Nadu PIN code starting with 6.")
+    : (/^[1-9]\d{5}$/.test(v) ? null : "Enter a 6-digit PIN code."));
+  /** The address parts, in the order shown. */
+  const ADDRESS = [
+    ["House", "Door no.", 50, 1, "house"], ["Street", "Street", 150, 2, "street"], ["Landmark", "Landmark", 150, 1, "landmark"],
+    ["Vtc", "Village / town / city", 100, 1, "vtc"], ["Taluk", "Taluk", 100, 1, "taluk"], ["District", "District", 100, 1, "district"],
+    ["State", "State", 0, 1, "state"], ["Pin", "PIN code", 6, 1, "pin"]
+  ];
+  const addressFields = (prefix) => ADDRESS.map(([part, label, max, span]) => {
+    if (part === "State") return { name: `${prefix}State`, label, type: "select", options: STATES, default: "Tamil Nadu" };
+    if (part === "Pin") return { name: `${prefix}Pin`, label, type: "digits", max: 6, rules: [pinFor(prefix)] };
+    return { name: `${prefix}${part}`, label, type: "text", max, span };
+  });
+  const communityOf = (s) => valuesOf(s, "personal").community;
+
   const VERIFY_CHOICE = [
     { value: "esevai", label: "Verify with e-Sevai", icon: "bi-shield-check" },
     { value: "upload", label: "Upload manually", icon: "bi-cloud-arrow-up" }
@@ -77,11 +98,16 @@ window.Schema = (() => {
         { name: "fullName", label: "Full name", type: "upper", max: 100, rules: [R.name], placeholder: "With initials expanded" },
         { name: "dob", label: "Date of birth", type: "readonly", tag: "From Aadhaar", value: (s) => dmy(s.ekyc.dob) },
         { name: "gender", label: "Gender", type: "readonly", tag: "From Aadhaar", value: (s) => s.ekyc.genderLabel },
-        { name: "fatherName", label: "Father's name", type: "upper", max: 100, rules: [R.name] },
+        { name: "fatherName", label: "Father's name", type: "upper", max: 100, rules: [R.name], default: (s) => (s.ekyc.fatherName || "").toUpperCase(),
+          hint: "Filled from your Aadhaar (C/O) when it names your father. You can correct it." },
         { name: "motherName", label: "Mother's name", type: "upper", max: 100, rules: [R.name] },
-        { name: "religion", label: "Religion", type: "select", options: ["Hindu", "Christian", "Muslim", "Sikh", "Buddhist", "Jain", "Other"] },
         { name: "maritalStatus", label: "Marital status", type: "select", options: [{ value: "UNM", label: "Unmarried" }, { value: "MAR", label: "Married" }, { value: "WID", label: "Widow" }, { value: "DIV", label: "Divorced" }] },
-        { name: "nationality", label: "Nationality", type: "select", options: ["Indian"], default: "Indian" }
+        { name: "nationality", label: "Nationality", type: "select", options: ["Indian"], default: "Indian" },
+        { type: "heading", label: "Religion & community" },
+        { name: "religion", label: "Religion", type: "select", options: ["Hindu", "Christian", "Muslim", "Sikh", "Buddhist", "Jain", "Other"] },
+        { name: "community", label: "Community", type: "select", options: COMMUNITIES },
+        { name: "subCaste", label: "Sub-caste", type: "select", optionsFrom: "community", options: (v) => SUB_CASTES[v.community] || [], emptyText: "Choose the community first" },
+        { name: "subCasteOther", label: "Sub-caste name", type: "upper", max: 100, when: (v) => v.subCaste === "Other", placeholder: "As in the certificate" }
       ]
     },
     address: {
@@ -90,32 +116,22 @@ window.Schema = (() => {
       fields: [
         { type: "heading", label: "Permanent address" },
         { name: "permSameAadhaar", label: "Same as my Aadhaar address", type: "check", span: 4 },
-        { name: "permLine1", label: "Door no. and street", type: "text", max: 200, span: 2 },
-        { name: "permVillage", label: "Village / town", type: "text", max: 100 },
-        { name: "permTaluk", label: "Taluk", type: "text", max: 100 },
-        { name: "permDistrict", label: "District", type: "text", max: 100 },
-        { name: "permPin", label: "PIN code", type: "digits", max: 6, rules: [R.pin] },
+        ...addressFields("perm"),
         { type: "heading", label: "Communication address" },
         { name: "commSamePerm", label: "Same as permanent address", type: "check", span: 4 },
-        { name: "commLine1", label: "Door no. and street", type: "text", max: 200, span: 2 },
-        { name: "commVillage", label: "Village / town", type: "text", max: 100 },
-        { name: "commTaluk", label: "Taluk", type: "text", max: 100 },
-        { name: "commDistrict", label: "District", type: "text", max: 100 },
-        { name: "commPin", label: "PIN code", type: "digits", max: 6, rules: [R.pin] }
+        ...addressFields("comm")
       ],
       /** "Same as" boxes copy and lock the address. */
       effects(v, api, s) {
-        const parts = ["Line1", "Village", "Taluk", "District", "Pin"];
         const a = s.ekyc.address;
-        const fromAadhaar = { Line1: a.line1, Village: a.village, Taluk: a.taluk, District: a.district, Pin: a.pin };
-        parts.forEach((p) => {
-          if (v.permSameAadhaar) api.set(`perm${p}`, fromAadhaar[p]);
-          api.readonly(`perm${p}`, Boolean(v.permSameAadhaar));
+        ADDRESS.forEach(([part, , , , key]) => {
+          if (v.permSameAadhaar) api.set(`perm${part}`, part === "State" ? (STATES.includes(a.state) ? a.state : "Tamil Nadu") : a[key]);
+          api.readonly(`perm${part}`, Boolean(v.permSameAadhaar));
         });
         const now = api.values();
-        parts.forEach((p) => {
-          if (v.commSamePerm) api.set(`comm${p}`, now[`perm${p}`]);
-          api.readonly(`comm${p}`, Boolean(v.commSamePerm));
+        ADDRESS.forEach(([part]) => {
+          if (v.commSamePerm) api.set(`comm${part}`, now[`perm${part}`]);
+          api.readonly(`comm${part}`, Boolean(v.commSamePerm));
         });
       }
     },
@@ -131,14 +147,15 @@ window.Schema = (() => {
       ]
     },
     community: {
-      module: "community", title: "Community", icon: "bi-people",
-      desc: "Your community and sub-caste, with the community certificate.",
+      module: "community", title: "Community certificate", icon: "bi-people",
+      desc: "Your community and sub-caste are chosen in Candidate profile, Personal details.",
       fields: [
-        { name: "community", label: "Community", type: "select", options: COMMUNITIES },
-        { name: "subCaste", label: "Sub-caste", type: "select", optionsFrom: "community", options: (v) => SUB_CASTES[v.community] || [], emptyText: "Choose the community first" },
-        { name: "subCasteOther", label: "Sub-caste name", type: "upper", max: 100, when: (v) => v.subCaste === "Other", placeholder: "As in the certificate" },
-        { type: "heading", label: "Community certificate", when: (v) => Boolean(v.community) },
-        ...certificate("comm", "Community certificate", { when: (v) => Boolean(v.community) })
+        { name: "chosen", label: "Community and sub-caste", type: "readonly", span: 2, value: (s) => {
+          const p = valuesOf(s, "personal");
+          const c = (COMMUNITIES.find((x) => x.value === p.community) || {}).label;
+          return c ? [c, p.subCaste === "Other" ? p.subCasteOther : p.subCaste].filter(Boolean).join(" · ") : "Not chosen yet (choose it in Personal details)";
+        } },
+        ...certificate("comm", "Community certificate", { when: (v, s) => Boolean(communityOf(s)) })
       ]
     },
     nativity: {
@@ -159,9 +176,14 @@ window.Schema = (() => {
       { name: "period", label: "Period of service", type: "period", from: "from", to: "to" },
       { name: "file", label: "Discharge certificate", type: "upload", kind: "pdf", span: 4 }
     ]),
-    widow: category("widow", "Destitute widow", "For women applicants with a destitute widow certificate.", "bi-person-heart", [
-      ...certificate("widow", "Destitute widow certificate")
-    ]),
+    widow: {
+      ...category("widow", "Destitute widow", "For women applicants with a destitute widow certificate.", "bi-person-heart", [
+        ...certificate("widow", "Destitute widow certificate")
+      ]),
+      // Only for women: the gender comes from Aadhaar and cannot be changed here.
+      eligible: (s) => s.ekyc.gender === "F",
+      notEligible: "Not applicable: this category is only for women applicants (your gender as per Aadhaar is {gender})."
+    },
     pwbd: category("pwbd", "Person with Benchmark Disability (PwBD)", "A disability of 40% or more, certified by a medical board.", "bi-universal-access", [
       { name: "type", label: "Type of disability", type: "select", options: ["Locomotor disability", "Low vision", "Blindness", "Hearing impairment", "Speech and language disability", "Intellectual disability", "Multiple disabilities", "Other"] },
       { name: "percent", label: "Disability (%)", type: "digits", max: 3, placeholder: "40-100", rules: [R.range(40, 100, "Enter a value from 40 to 100.")] },
@@ -287,7 +309,11 @@ window.Schema = (() => {
     const def = SECTIONS[key];
     const saved = (s.sections && s.sections[key]) || {};
     const v = {};
-    def.fields.forEach((f) => { if (f.name) v[f.name] = saved[f.name] !== undefined ? saved[f.name] : f.default !== undefined ? f.default : f.type === "check" || f.type === "switch" ? false : ""; });
+    def.fields.forEach((f) => {
+      if (!f.name) return;
+      const d = typeof f.default === "function" ? f.default(s) : f.default;
+      v[f.name] = saved[f.name] !== undefined ? saved[f.name] : d !== undefined ? d : f.type === "check" || f.type === "switch" ? false : "";
+    });
     return v;
   }
   function count(fields, v, s) {
@@ -358,7 +384,7 @@ window.Schema = (() => {
 
   /** Activation fee (same rules as the server). */
   function fee(s) {
-    const c = valuesOf(s, "community");
+    const c = valuesOf(s, "personal");
     const gender = s.ekyc.gender;
     const marital = valuesOf(s, "personal").maritalStatus;
     const label = (COMMUNITIES.find((x) => x.value === c.community) || {}).label || "Not selected";
@@ -377,10 +403,10 @@ window.Schema = (() => {
    * status: VERIFIED (e-Sevai), UPLOADED (manual copy) or MISSING (neither yet). No officer review.
    */
   const CERT_SLOTS = [
-    { section: "community", p: "comm", label: "Community certificate", page: "community.html#sec-community", applies: (s) => Boolean(valuesOf(s, "community").community) },
+    { section: "community", p: "comm", label: "Community certificate", page: "community.html#sec-community", applies: (s) => Boolean(communityOf(s)) },
     { section: "nativity", p: "nat", label: "Nativity certificate", page: "community.html#sec-nativity", applies: () => true },
     { section: "identity", p: "income", label: "Income certificate", page: "profile.html#sec-identity", applies: () => true },
-    { section: "widow", p: "widow", label: "Destitute widow certificate", page: "community.html#sec-widow", applies: (s) => Boolean(valuesOf(s, "widow").on) }
+    { section: "widow", p: "widow", label: "Destitute widow certificate", page: "community.html#sec-widow", applies: (s) => s.ekyc.gender === "F" && Boolean(valuesOf(s, "widow").on) }
   ];
   function certStatus(s, slot) {
     const v = valuesOf(s, slot.section);

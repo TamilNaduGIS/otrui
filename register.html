@@ -113,6 +113,8 @@
                 <div class="kyc__wide"><dt>Name</dt><dd id="kycName"></dd></div>
                 <div><dt>Date of birth</dt><dd id="kycDob"></dd></div>
                 <div><dt>Gender</dt><dd id="kycGender"></dd></div>
+                <div><dt id="kycCareLabel">Father's name</dt><dd id="kycFather"></dd></div>
+                <div><dt>District</dt><dd id="kycDistrict"></dd></div>
                 <div class="kyc__wide"><dt>Address</dt><dd id="kycAddress"></dd></div>
               </dl>
               <span class="kyc__badge"><i class="bi bi-patch-check-fill" aria-hidden="true"></i>Verified by UIDAI</span>
@@ -177,11 +179,20 @@
           <!-- Done -->
           <section class="step done d-none" data-step="3" data-title="Account created">
             <div class="done__icon" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
-            <p class="done__text">Your OTR account is ready. Note your file reference number. Next, complete your profile and activate your OTR.</p>
+            <p class="done__text">Your OTR account is ready. Note your OTR number and file reference number. Next, complete your profile and pay the fee to activate your OTR.</p>
             <div class="done__ref">
-              <span class="done__ref-label">File reference number</span>
-              <span class="done__ref-value" id="fileRef">REG2026112600001</span>
-              <button type="button" class="btn btn--ghost btn--sm" id="copyRef"><i class="bi bi-copy" aria-hidden="true"></i>Copy</button>
+              <span class="done__ref-label">Your OTR number</span>
+              <span class="done__ref-value" id="otrNo"></span>
+              <span class="tag tag--warn">Inactive until the fee is paid</span>
+              <button type="button" class="btn btn--ghost btn--sm" data-copy="otrNo"><i class="bi bi-copy" aria-hidden="true"></i><span>Copy</span></button>
+            </div>
+            <div class="ref-box">
+              <div class="ref-box__top">
+                <span class="done__ref-label">File reference number</span>
+                <span class="ref-box__value" id="fileRef"></span>
+                <button type="button" class="btn btn--ghost btn--sm" data-copy="fileRef"><i class="bi bi-copy" aria-hidden="true"></i><span>Copy</span></button>
+              </div>
+              <div class="ref-parts" id="refParts" aria-label="What the file reference number means"></div>
             </div>
             <a class="btn btn--primary btn--block" href="dashboard.html" id="btnToDashboard">Go to my dashboard</a>
           </section>
@@ -203,6 +214,7 @@
   </div>
 
   <script src="js/core/ui.js"></script>
+  <script src="js/core/ekyc.js"></script>
   <script src="js/core/store.js"></script>
   <script src="js/pages/register.js"></script>
 </body>
