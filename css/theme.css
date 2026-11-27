@@ -1,0 +1,47 @@
+/* ==========================================================================
+   OTR v2 theme: the same colours and fonts as the current OTR (web/otr/css/one_style.css).
+   Every v2 page loads this file first; change colours only here.
+   ========================================================================== */
+:root {
+  /* Brand (unchanged from the current OTR) */
+  --c-navy: #173f70;
+  --c-navy-deep: #12345e;
+  --c-navy-light: #1d4e89;
+  --c-blue: #2465a5;
+  --c-sky: #dceeff;
+  --c-ice: #eff6fd;
+  --c-page: #f4f8fd;
+  --c-card: #ffffff;
+  --c-text: #152c4a;
+  --c-muted: #647a96;
+  --c-border: #dfe9f4;
+  --c-border-strong: #c9d8e8;
+  --c-gold: #d8ac42;
+  --c-gold-soft: #fbf3df;
+  --c-green: #159765;
+  --c-green-soft: #e3f5ee;
+  --c-amber-soft: #fdf3dc;
+  --c-red: #b42318;
+  --c-red-soft: #fdecea;
+
+  /* Type */
+  --font: "Inter", "Noto Sans Tamil", system-ui, "Segoe UI", sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-md: 0.9375rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 2rem;
+
+  /* Shape and depth */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --sh-1: 0 1px 2px rgba(21, 44, 74, .04), 0 1px 3px rgba(21, 44, 74, .05);
+  --sh-2: 0 1px 2px rgba(21, 44, 74, .04), 0 6px 18px -8px rgba(21, 44, 74, .12);
+  --sh-3: 0 12px 32px -12px rgba(21, 44, 74, .22);
+  --focus: 0 0 0 3px rgba(36, 101, 165, .28);
+
+  /* Controls */
+  --control-h: 40px;
+}

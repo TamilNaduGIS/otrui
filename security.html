@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign-in & security | OTR | Tamil Nadu Uniformed Services Recruitment Board</title>
+  <link rel="stylesheet" href="assets/vendor/fonts/fonts.css" />
+  <link rel="stylesheet" href="assets/vendor/bootstrap-icons/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="app">
+  <main id="main" data-module="security">
+    <header class="page-head">
+      <div>
+        <p class="page-head__crumb">Account</p>
+        <h1 class="page-head__title">Sign-in &amp; security</h1>
+        <p class="page-head__text">Your username, password and the devices where you are signed in.</p>
+      </div>
+      <div class="page-head__side"></div>
+    </header>
+    <div class="two-col">
+      <section class="card" aria-labelledby="pwdTitle">
+        <div class="card__head"><h2 class="card__title" id="pwdTitle"><i class="bi bi-key" aria-hidden="true"></i>Change password</h2></div>
+        <form class="form" id="pwdForm" novalidate>
+          <div id="pwdAlert" class="d-none" role="status"></div>
+          <div class="field">
+            <label class="field__label" for="curPassword">Current password</label>
+            <div class="input-wrap"><i class="bi bi-lock" aria-hidden="true"></i><input class="input" type="password" id="curPassword" autocomplete="current-password" />
+              <button type="button" class="input-wrap__btn" data-toggle-password="curPassword" aria-label="Show password" aria-pressed="false"><i class="bi bi-eye" aria-hidden="true"></i></button></div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="newPassword">New password</label>
+            <div class="input-wrap"><i class="bi bi-lock" aria-hidden="true"></i><input class="input" type="password" id="newPassword" maxlength="64" autocomplete="new-password" aria-describedby="pwdRules" />
+              <button type="button" class="input-wrap__btn" data-toggle-password="newPassword" aria-label="Show password" aria-pressed="false"><i class="bi bi-eye" aria-hidden="true"></i></button></div>
+          </div>
+          <ul class="rules" id="pwdRules" aria-label="Password rules">
+            <li data-rule="len">8-64 characters</li><li data-rule="upper">Upper case</li><li data-rule="lower">Lower case</li><li data-rule="digit">Number</li><li data-rule="special">Special character</li>
+          </ul>
+          <div class="field">
+            <label class="field__label" for="confirmPassword">Confirm new password</label>
+            <div class="input-wrap"><i class="bi bi-lock" aria-hidden="true"></i><input class="input" type="password" id="confirmPassword" maxlength="64" autocomplete="new-password" /></div>
+          </div>
+          <button type="submit" class="btn btn--primary">Change password</button>
+        </form>
+      </section>
+      <div class="app-main">
+        <section class="card" aria-labelledby="accTitle">
+          <div class="card__head"><h2 class="card__title" id="accTitle"><i class="bi bi-person-circle" aria-hidden="true"></i>Account</h2></div>
+          <div id="accInfo"></div>
+        </section>
+        <section class="card" aria-labelledby="sessTitle">
+          <div class="card__head"><h2 class="card__title" id="sessTitle"><i class="bi bi-laptop" aria-hidden="true"></i>Where you are signed in</h2>
+            <button type="button" class="btn btn--outline btn--sm" id="btnSignOutOthers">Sign out other devices</button></div>
+          <div id="sessions"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/ekyc.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/core/schema.js"></script>
+  <script src="js/core/shell.js"></script>
+  <script src="js/core/form.js"></script>
+  <script src="js/pages/security.js"></script>
+</body>
+</html>

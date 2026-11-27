@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In | OTR | Tamil Nadu Uniformed Services Recruitment Board</title>
+  <!-- Fonts and icons: assets/vendor (same files as web/shared/vendor). -->
+  <link rel="stylesheet" href="assets/vendor/fonts/fonts.css" />
+  <link rel="stylesheet" href="assets/vendor/bootstrap-icons/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/pages/login.css" />
+</head>
+<body>
+  <a class="skip-link" href="#signin">Skip to sign in</a>
+
+  <div class="page">
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html" aria-label="TNUSRB One-Time Registration, sign in">
+          <span class="brand__mark" aria-hidden="true">OTR</span>
+          <span class="brand__text">
+            <span class="brand__gov">Government of Tamil Nadu</span>
+            <span class="brand__name">Tamil Nadu Uniformed Services Recruitment Board</span>
+          </span>
+        </a>
+        <div class="header-actions">
+          <span class="header-actions__text">New applicant?</span>
+          <a class="btn btn--outline btn--sm" href="register.html">Register</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <div class="login">
+
+        <!-- Brand panel -->
+        <section class="login-brand" aria-labelledby="brandTitle">
+          <div class="login-brand__inner">
+            <span class="login-brand__eyebrow">One-Time Registration</span>
+            <h2 class="login-brand__title" id="brandTitle">Register once. Apply to every TNUSRB recruitment.</h2>
+            <p class="login-brand__lead">Your OTR profile holds your personal details, qualifications and certificates, ready for every notification.</p>
+
+            <ul class="feature-list">
+              <li class="feature">
+                <span class="feature__icon" aria-hidden="true"><i class="bi bi-person-badge"></i></span>
+                <div>
+                  <p class="feature__title">One profile for all recruitments</p>
+                  <p class="feature__text">Fill in your details once and reuse them in every application.</p>
+                </div>
+              </li>
+              <li class="feature">
+                <span class="feature__icon" aria-hidden="true"><i class="bi bi-folder2-open"></i></span>
+                <div>
+                  <p class="feature__title">Documents in one place</p>
+                  <p class="feature__text">Upload your photo, signature and certificates once.</p>
+                </div>
+              </li>
+              <li class="feature">
+                <span class="feature__icon" aria-hidden="true"><i class="bi bi-shield-check"></i></span>
+                <div>
+                  <p class="feature__title">Verified and secure</p>
+                  <p class="feature__text">Mobile, email and Aadhaar verification protect your account.</p>
+                </div>
+              </li>
+            </ul>
+
+            <p class="login-brand__note">
+              <i class="bi bi-info-circle" aria-hidden="true"></i>
+              <span>Keep your registered mobile number and email active. One-time passwords (OTPs) are sent to them.</span>
+            </p>
+          </div>
+        </section>
+
+        <!-- Sign-in panel -->
+        <section class="login-panel" id="signin" aria-labelledby="signinTitle">
+          <div class="login-card">
+            <h1 class="login-card__title" id="signinTitle">Sign in to your OTR account</h1>
+            <p class="login-card__subtitle">Use your registered mobile number, email, username or file reference number.</p>
+
+            <div id="loginAlert" class="login-card__alert d-none" role="alert"></div>
+
+            <div class="segmented" role="tablist" aria-label="Sign-in method">
+              <button type="button" class="segmented__tab" role="tab" id="tabPassword" aria-controls="panelPassword" aria-selected="true">
+                <i class="bi bi-key" aria-hidden="true"></i>Password
+              </button>
+              <button type="button" class="segmented__tab" role="tab" id="tabOtp" aria-controls="panelOtp" aria-selected="false" tabindex="-1">
+                <i class="bi bi-phone" aria-hidden="true"></i>OTP
+              </button>
+            </div>
+
+            <form id="loginForm" class="form" novalidate>
+              <div class="field">
+                <label class="field__label" for="loginIdentifier">Registered ID<span class="req" aria-hidden="true">*</span></label>
+                <div class="input-wrap">
+                  <i class="bi bi-person" aria-hidden="true"></i>
+                  <input class="input" type="text" id="loginIdentifier" name="identifier" autocomplete="username"
+                         placeholder="Enter your registered ID" required aria-describedby="identifierHint" />
+                </div>
+                <span class="field__hint" id="identifierHint">Login with: User name/Mobile no/OTR</span>
+              </div>
+
+              <!-- Password sign-in -->
+              <div class="form" id="panelPassword" role="tabpanel" aria-labelledby="tabPassword">
+                <div class="field">
+                  <div class="field__label-row">
+                    <label class="field__label" for="loginPassword">Password<span class="req" aria-hidden="true">*</span></label>
+                    <a class="field__link" href="forgot-password.html">Forgot password?</a>
+                  </div>
+                  <div class="input-wrap">
+                    <i class="bi bi-lock" aria-hidden="true"></i>
+                    <input class="input" type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="Enter your password" required />
+                    <button type="button" class="input-wrap__btn" data-toggle-password="loginPassword" aria-label="Show password" aria-pressed="false">
+                      <i class="bi bi-eye" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="field" id="captchaRow">
+                  <label class="field__label" for="captchaInput">Security code<span class="req" aria-hidden="true">*</span></label>
+                  <div class="captcha">
+                    <img class="captcha__image" id="captchaImage" src="assets/img/captcha-sample.svg" width="150" height="44"
+                         alt="Security code image. If you cannot read it, sign in with OTP." />
+                    <button type="button" class="btn btn--outline btn--icon" id="refreshCaptcha" aria-label="Show a new security code" title="New code">
+                      <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+                    </button>
+                    <input class="input" type="text" id="captchaInput" name="captcha" maxlength="6" autocomplete="off" placeholder="Enter code" required />
+                  </div>
+                </div>
+              </div>
+
+              <!-- OTP sign-in -->
+              <div class="form d-none" id="panelOtp" role="tabpanel" aria-labelledby="tabOtp">
+                <div class="field">
+                  <label class="field__label" for="otpChannel">Send OTP to<span class="req" aria-hidden="true">*</span></label>
+                  <div class="input-group">
+                    <select class="input" id="otpChannel" name="channel">
+                      <option value="MOBILE">Mobile number</option>
+                      <option value="EMAIL">Email</option>
+                    </select>
+                    <button type="button" class="btn btn--outline" id="btnSendOtp">Send OTP</button>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="loginOtp">One-time password (OTP)<span class="req" aria-hidden="true">*</span></label>
+                  <input class="input otp-input" type="text" id="loginOtp" name="otp" maxlength="6" inputmode="numeric"
+                         autocomplete="one-time-code" placeholder="6-digit OTP" aria-describedby="otpStatus" />
+                  <span class="otp-status" id="otpStatus" aria-live="polite">The OTP is valid for a few minutes.</span>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn--primary btn--block" id="btnLogin">Sign in</button>
+            </form>
+
+            <div class="login-card__divider">New to OTR?</div>
+            <a class="btn btn--outline btn--block" href="register.html">Create your OTR account</a>
+
+            <p class="login-card__security">
+              <i class="bi bi-shield-lock" aria-hidden="true"></i>
+              <span>Never share your password or OTP with anyone. TNUSRB will never ask for them by phone, SMS or email.</span>
+            </p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <span>&copy; 2026 Tamil Nadu Uniformed Services Recruitment Board, Government of Tamil Nadu</span>
+        <span>Best viewed in the latest Chrome, Edge or Firefox</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/ekyc.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/pages/login.js"></script>
+</body>
+</html>
