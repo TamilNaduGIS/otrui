@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account | OTR | Tamil Nadu Uniformed Services Recruitment Board</title>
+  <link rel="stylesheet" href="assets/vendor/fonts/fonts.css" />
+  <link rel="stylesheet" href="assets/vendor/bootstrap-icons/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/pages/register.css" />
+</head>
+<body>
+  <a class="skip-link" href="#stepTitle">Skip to the form</a>
+
+  <div class="page">
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html" aria-label="TNUSRB One-Time Registration, sign in">
+          <span class="brand__mark" aria-hidden="true">OTR</span>
+          <span class="brand__text">
+            <span class="brand__gov">Government of Tamil Nadu</span>
+            <span class="brand__name">Tamil Nadu Uniformed Services Recruitment Board</span>
+          </span>
+        </a>
+        <div class="header-actions">
+          <span class="header-actions__text">Already registered?</span>
+          <a class="btn btn--outline btn--sm" href="index.html">Sign in</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <div class="reg">
+        <div class="reg__head">
+          <h1 class="reg__title">Create your OTR account</h1>
+          <p class="reg__subtitle">Verify your mobile, email and Aadhaar, then choose your sign-in details.</p>
+        </div>
+
+        <!-- Progress -->
+        <ol class="steps" id="steps" aria-label="Registration progress">
+          <li class="steps__item" data-step="0"><button type="button" class="steps__btn" disabled><span class="steps__dot">1</span><span class="steps__label">Contact</span></button></li>
+          <li class="steps__item" data-step="1"><button type="button" class="steps__btn" disabled><span class="steps__dot">2</span><span class="steps__label">Aadhaar</span></button></li>
+          <li class="steps__item" data-step="2"><button type="button" class="steps__btn" disabled><span class="steps__dot">3</span><span class="steps__label">Account</span></button></li>
+        </ol>
+
+        <form class="reg-card" id="regForm" novalidate>
+          <div class="reg-card__head">
+            <p class="reg-card__eyebrow" id="stepCount">Step 1 of 3</p>
+            <h2 class="reg-card__title" id="stepTitle" tabindex="-1">Contact details</h2>
+          </div>
+
+          <div id="formAlert" class="reg-card__alert d-none" role="alert"></div>
+
+          <!-- Step 1: contact -->
+          <section class="step" data-step="0" data-title="Contact details">
+            <div class="field">
+              <label class="field__label" for="mobile">Mobile number<span class="req" aria-hidden="true">*</span></label>
+              <div class="input-group">
+                <div class="input-wrap">
+                  <i class="bi bi-phone" aria-hidden="true"></i>
+                  <input class="input" type="tel" id="mobile" inputmode="numeric" maxlength="10" autocomplete="tel-national" placeholder="10-digit mobile number" />
+                </div>
+                <button type="button" class="btn btn--outline verify-btn" data-send="mobile">Send OTP</button>
+              </div>
+              <div class="otp-row d-none" data-otp-row="mobile">
+                <input class="input otp-input" type="text" id="otpMobile" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="Enter OTP" aria-label="OTP sent to your mobile" />
+                <button type="button" class="btn btn--primary" data-check="mobile">Verify</button>
+              </div>
+              <span class="field__status" data-status="mobile" aria-live="polite"></span>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="email">Email<span class="req" aria-hidden="true">*</span></label>
+              <div class="input-group">
+                <div class="input-wrap">
+                  <i class="bi bi-envelope" aria-hidden="true"></i>
+                  <input class="input" type="email" id="email" maxlength="120" autocomplete="email" placeholder="name@example.com" />
+                </div>
+                <button type="button" class="btn btn--outline verify-btn" data-send="email">Send OTP</button>
+              </div>
+              <div class="otp-row d-none" data-otp-row="email">
+                <input class="input otp-input" type="text" id="otpEmail" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="Enter OTP" aria-label="OTP sent to your email" />
+                <button type="button" class="btn btn--primary" data-check="email">Verify</button>
+              </div>
+              <span class="field__status" data-status="email" aria-live="polite"></span>
+            </div>
+          </section>
+
+          <!-- Step 2: Aadhaar -->
+          <section class="step d-none" data-step="1" data-title="Aadhaar verification">
+            <div class="field">
+              <label class="field__label" for="aadhaar">Aadhaar number<span class="req" aria-hidden="true">*</span></label>
+              <div class="input-group">
+                <div class="input-wrap">
+                  <i class="bi bi-person-vcard" aria-hidden="true"></i>
+                  <input class="input" type="text" id="aadhaar" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="12-digit Aadhaar number" />
+                </div>
+                <button type="button" class="btn btn--outline verify-btn" data-send="aadhaar">Send OTP</button>
+              </div>
+              <span class="field__hint">The OTP goes to the mobile number linked with your Aadhaar.</span>
+              <div class="otp-row d-none" data-otp-row="aadhaar">
+                <input class="input otp-input" type="text" id="otpAadhaar" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="Enter OTP" aria-label="OTP sent to your Aadhaar-linked mobile" />
+                <button type="button" class="btn btn--primary" data-check="aadhaar">Verify</button>
+              </div>
+              <span class="field__status" data-status="aadhaar" aria-live="polite"></span>
+            </div>
+
+            <div class="kyc d-none" id="kyc" aria-live="polite">
+              <div class="kyc__photo" id="kycPhoto"><i class="bi bi-person" aria-hidden="true"></i></div>
+              <dl class="kyc__data">
+                <div class="kyc__wide"><dt>Name</dt><dd id="kycName"></dd></div>
+                <div><dt>Date of birth</dt><dd id="kycDob"></dd></div>
+                <div><dt>Gender</dt><dd id="kycGender"></dd></div>
+                <div class="kyc__wide"><dt>Address</dt><dd id="kycAddress"></dd></div>
+              </dl>
+              <span class="kyc__badge"><i class="bi bi-patch-check-fill" aria-hidden="true"></i>Verified by UIDAI</span>
+            </div>
+
+            <div class="consent d-none" id="consentBox">
+              <label class="check">
+                <input type="checkbox" id="consent" />
+                <span>I agree to share my Aadhaar details with the Government of Tamil Nadu recruitment agency for identity verification and to avoid duplicate registrations.</span>
+              </label>
+              <details class="consent__more">
+                <summary>Read the full consent</summary>
+                <p lang="en">I voluntarily consent to share my Aadhaar details with the concerned Department / Recruitment Agency of the Government of Tamil Nadu for identity verification, authentication, and de-duplication in accordance with the Aadhaar (Targeted Delivery of Financial and Other Subsidies, Benefits and Services) Act, 2016 and the Digital Personal Data Protection Act, 2023. I understand that my Aadhaar number will not be stored in clear text and will be processed securely through UIDAI-compliant tokenization/vault mechanisms.</p>
+                <p lang="ta">ஆதார் (நிதி மற்றும் பிற மானியங்கள், நன்மைகள் மற்றும் சேவைகளை இலக்கு வைத்து வழங்குதல்) சட்டம், 2016 மற்றும் டிஜிட்டல் தனிநபர் தரவுப் பாதுகாப்புச் சட்டம், 2023 ஆகியவற்றின் விதிகளின்படி, அடையாள சரிபார்ப்பு, அங்கீகாரம் மற்றும் இரட்டைப் பதிவுகளைத் தவிர்ப்பதற்காக (de-duplication) தமிழ்நாடு அரசின் சம்பந்தப்பட்ட துறை / ஆட்சேர்ப்பு முகமையுடன் எனது ஆதார் விவரங்களைப் பகிர்ந்து கொள்ள நான் மனப்பூர்வமாக சம்மதிக்கிறேன். எனது ஆதார் எண் நேரடி எழுத்து வடிவில் (clear text) சேமிக்கப்படாது என்பதையும், UIDAI விதிகளுக்குட்பட்ட பாதுகாப்பான டோக்கனைசேஷன் / வால்ட் (vault) தொழில்நுட்பம் மூலமாகவே கையாளப்படும் என்பதையும் நான் அறிவேன்.</p>
+              </details>
+            </div>
+          </section>
+
+          <!-- Step 3: account -->
+          <section class="step d-none" data-step="2" data-title="Create your sign-in">
+            <div class="field">
+              <label class="field__label" for="username">Username<span class="req" aria-hidden="true">*</span></label>
+              <div class="input-wrap">
+                <i class="bi bi-person" aria-hidden="true"></i>
+                <input class="input" type="text" id="username" maxlength="20" autocomplete="username" spellcheck="false" placeholder="6-20 lower-case letters or numbers" />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label class="field__label" for="password">Password<span class="req" aria-hidden="true">*</span></label>
+                <div class="input-wrap">
+                  <i class="bi bi-lock" aria-hidden="true"></i>
+                  <input class="input" type="password" id="password" maxlength="64" autocomplete="new-password" placeholder="Create a password" aria-describedby="pwdRules" />
+                  <button type="button" class="input-wrap__btn" data-toggle-password="password" aria-label="Show password" aria-pressed="false"><i class="bi bi-eye" aria-hidden="true"></i></button>
+                </div>
+              </div>
+              <div class="field">
+                <label class="field__label" for="confirmPassword">Confirm password<span class="req" aria-hidden="true">*</span></label>
+                <div class="input-wrap">
+                  <i class="bi bi-lock" aria-hidden="true"></i>
+                  <input class="input" type="password" id="confirmPassword" maxlength="64" autocomplete="new-password" placeholder="Re-enter the password" />
+                </div>
+              </div>
+            </div>
+            <ul class="rules" id="pwdRules" aria-label="Password rules">
+              <li data-rule="len">8-64 characters</li>
+              <li data-rule="upper">Upper case</li>
+              <li data-rule="lower">Lower case</li>
+              <li data-rule="digit">Number</li>
+              <li data-rule="special">Special character</li>
+            </ul>
+            <div class="field">
+              <label class="field__label" for="captchaInput">Security code<span class="req" aria-hidden="true">*</span></label>
+              <div class="captcha">
+                <img class="captcha__image" src="assets/img/captcha-sample.svg" width="150" height="44" alt="Security code image" />
+                <button type="button" class="btn btn--outline btn--icon" id="refreshCaptcha" aria-label="Show a new security code" title="New code"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i></button>
+                <input class="input" type="text" id="captchaInput" maxlength="6" autocomplete="off" placeholder="Enter code" />
+              </div>
+            </div>
+          </section>
+
+          <!-- Done -->
+          <section class="step done d-none" data-step="3" data-title="Account created">
+            <div class="done__icon" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
+            <p class="done__text">Your OTR account is ready. Note your file reference number. Next, complete your profile and activate your OTR.</p>
+            <div class="done__ref">
+              <span class="done__ref-label">File reference number</span>
+              <span class="done__ref-value" id="fileRef">REG2026112600001</span>
+              <button type="button" class="btn btn--ghost btn--sm" id="copyRef"><i class="bi bi-copy" aria-hidden="true"></i>Copy</button>
+            </div>
+            <a class="btn btn--primary btn--block" href="dashboard.html" id="btnToDashboard">Go to my dashboard</a>
+          </section>
+
+          <div class="reg-card__foot" id="nav">
+            <button type="button" class="btn btn--ghost" id="btnBack"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back</button>
+            <button type="submit" class="btn btn--primary" id="btnNext">Continue<i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <span>&copy; 2026 Tamil Nadu Uniformed Services Recruitment Board, Government of Tamil Nadu</span>
+        <span>Best viewed in the latest Chrome, Edge or Firefox</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/pages/register.js"></script>
+</body>
+</html>

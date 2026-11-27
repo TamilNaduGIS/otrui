@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documents | OTR | Tamil Nadu Uniformed Services Recruitment Board</title>
+  <link rel="stylesheet" href="assets/vendor/fonts/fonts.css" />
+  <link rel="stylesheet" href="assets/vendor/bootstrap-icons/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="app">
+  <main id="main" data-module="documents">
+    <header class="page-head">
+      <div>
+        <p class="page-head__crumb">My profile</p>
+        <h1 class="page-head__title">Documents</h1>
+        <p class="page-head__text">Your photo, signature and thumb impression, every certificate you have uploaded, and its verification status.</p>
+      </div>
+      <div class="page-head__side"><div class="page-head__pct" id="pagePct"></div></div>
+    </header>
+    <div class="doc-stats" id="docStats"></div>
+    <div class="app-main" id="cards"></div>
+    <section class="card" aria-labelledby="allDocsTitle">
+      <div class="card__head"><h2 class="card__title" id="allDocsTitle"><i class="bi bi-folder2-open" aria-hidden="true"></i>All my documents</h2>
+        <div class="seg vfilter" role="group" aria-label="Show documents" id="docFilter"></div></div>
+      <div id="docTable"></div>
+    </section>
+    <div class="app-main" id="other"></div>
+  </main>
+
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/core/schema.js"></script>
+  <script src="js/core/shell.js"></script>
+  <script src="js/core/form.js"></script>
+  <script src="js/pages/documents.js"></script>
+</body>
+</html>

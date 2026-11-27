@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verification | OTR | Tamil Nadu Uniformed Services Recruitment Board</title>
+  <link rel="stylesheet" href="assets/vendor/fonts/fonts.css" />
+  <link rel="stylesheet" href="assets/vendor/bootstrap-icons/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="app">
+  <main id="main" data-module="verification">
+    <header class="page-head">
+      <div>
+        <p class="page-head__crumb">Status</p>
+        <h1 class="page-head__title">Verification</h1>
+        <p class="page-head__text">Mobile, email and Aadhaar are verified by OTP. Certificates are verified with e-Sevai from the details you enter; if e-Sevai cannot find one, upload it manually.</p>
+      </div>
+      <div class="page-head__side"></div>
+    </header>
+    <section class="card" aria-labelledby="flowTitle">
+      <div class="card__head"><h2 class="card__title" id="flowTitle"><i class="bi bi-diagram-3" aria-hidden="true"></i>Verification steps</h2></div>
+      <div class="vflow" id="vflow"></div>
+    </section>
+    <div class="vcounts" id="vcounts"></div>
+    <section class="card" aria-labelledby="itemsTitle">
+      <div class="card__head"><h2 class="card__title" id="itemsTitle"><i class="bi bi-list-check" aria-hidden="true"></i>What is verified</h2>
+        <div class="seg vfilter" role="group" aria-label="Show items" id="vfilter"></div></div>
+      <div class="vlist" id="vlist"></div>
+      <p class="note note--info verify-note"><i class="bi bi-info-circle" aria-hidden="true"></i><span>e-Sevai checks the certificate number and details you enter against the Revenue Department records. A certificate you upload yourself is kept with your profile and is shown as Uploaded.</span></p>
+    </section>
+  </main>
+
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/core/schema.js"></script>
+  <script src="js/core/shell.js"></script>
+  <script src="js/core/form.js"></script>
+  <script src="js/pages/verification.js"></script>
+</body>
+</html>

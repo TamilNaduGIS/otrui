@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile history | OTR | Tamil Nadu Uniformed Services Recruitment Board</title>
+  <link rel="stylesheet" href="assets/vendor/fonts/fonts.css" />
+  <link rel="stylesheet" href="assets/vendor/bootstrap-icons/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="app">
+  <main id="main" data-module="history">
+    <header class="page-head">
+      <div>
+        <p class="page-head__crumb">Status</p>
+        <h1 class="page-head__title">Profile history</h1>
+        <p class="page-head__text">Every saved change to your profile is a new version. Open a version to see exactly what changed.</p>
+      </div>
+      <div class="page-head__side"><button type="button" class="btn btn--outline btn--sm" id="btnCsv"><i class="bi bi-download" aria-hidden="true"></i>Download (CSV)</button></div>
+    </header>
+    <section class="card" aria-labelledby="histTitle">
+      <div class="card__head"><h2 class="card__title" id="histTitle"><i class="bi bi-clock-history" aria-hidden="true"></i>Versions</h2><span class="tag tag--muted" id="histCount"></span></div>
+      <div class="hist-tools">
+        <label class="visually-hidden" for="histSearch">Search the history</label>
+        <input class="input" type="search" id="histSearch" placeholder="Search a field or value" />
+        <div class="pills" id="histFilter" role="group" aria-label="Show changes from"></div>
+      </div>
+      <div id="histList"></div>
+    </section>
+  </main>
+
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/core/schema.js"></script>
+  <script src="js/core/shell.js"></script>
+  <script src="js/core/form.js"></script>
+  <script src="js/pages/history.js"></script>
+</body>
+</html>
